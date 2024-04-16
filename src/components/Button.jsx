@@ -1,6 +1,6 @@
 import React from "react";
 
-const Button = ({ children, className, onClick }) =>
+const Button = React.forwardRef(({ children, className, onClick }, ref) =>
 {
     return (
         <button
@@ -8,10 +8,12 @@ const Button = ({ children, className, onClick }) =>
         text-xl font-[400] text-textDark outline-none transition-all hover:bg-blue-500 hover:text-white
         focus:ring-2 focus:ring-blue-500 active:scale-95 active:bg-blue-700 dark:bg-dark-100 dark:text-text
         ${className}` }
-            onClick={ onClick }>
+            onClick={ onClick }
+            ref={ ref }
+        >
             { children }
         </button>
     );
-};
+});
 
 export default Button;
