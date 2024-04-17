@@ -577,10 +577,10 @@ const Converter = () =>
     const handleKeyboardButtonClick = (btn) =>
     {
         buttonsRef.current[btn].click();
-        buttonsRef.current[btn].classList.add("ring-2", "ring-blue-500");
+        buttonsRef.current[btn].classList.add("ring-2", "ring-violet-500");
         setTimeout(() =>
         {
-            buttonsRef.current[btn].classList.remove("ring-2", "ring-blue-500");
+            buttonsRef.current[btn].classList.remove("ring-2", "ring-violet-500");
         }, 200);
     };
 
