@@ -1,8 +1,43 @@
-# React + Vite
+# Calculator and Converter App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An all-encompassing app for daily use or complex calculations. Features a solid calculator, as well as a converter that covers area, length, mass, time, energy and more. The modern design and light/dark mode provides a pleasant user experience.
 
-Currently, two official plugins are available:
+This app handles responsive design, error handling and support for both mobile and desktop.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Section for periodic table / elements information in progress.
+
+## Tech Stack
+
++ React
++ Tailwind
+
+
+[Live Demo](https://qhf5xj-5173.csb.app/)
+
+## Installation
+
+Clone this repository.
+
+#### Install dependencies:
+
+```bash
+
+npm install
+
+```
+
+#### Start app:
+
+```bash
+
+npm run dev
+
+```
+
+### To visit app:
+
+```bash
+
+http://localhost:5173/
+
+```
