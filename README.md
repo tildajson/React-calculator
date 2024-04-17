@@ -11,8 +11,12 @@ Section for periodic table / elements information in progress.
 + React
 + Tailwind
 
+## Screenshots
 
 [Live Demo](https://qhf5xj-5173.csb.app/)
+
+![calc-light](https://github.com/tildajson/React-calculator-converter/assets/130234732/c89c73da-5814-41a0-85dc-212044a343d9) ![convert-dark](https://github.com/tildajson/React-calculator-converter/assets/130234732/e2741181-b924-47f2-96a3-cafc92a67d5b)
+
 
 ## Installation
 
