@@ -479,5 +479,240 @@ const Converter = () =>
         converters[selectedConverter].units[0],
         converters[selectedConverter].units[1],
     ]);
+    const [values, setValues] = useState([0, 0]);
+    const [focusedInput, setFocusedInput] = useState(0);
+    const buttonsRef = useRef({});
 
+    const handleConverterChange = (index) =>
+    {
+        setSelectedConverter(index);
+        setSelectedUnits([converters[index].units[0], converters[index].units[1]]);
+        setValues([0, 0]);
+    };
+
+    const handleUnitChange = (index, unitIndex) =>
+    {
+        setFocusedInput(index);
+        let prevSelectedUnits = [...selectedUnits];
+        prevSelectedUnits[index] = converters[selectedConverter].units[unitIndex];
+        setSelectedUnits(prevSelectedUnits);
+
+        let value = (values[index] * selectedUnits[index].value) / prevSelectedUnits[index].value;
+
+        // Round decimal points to 2 digits
+        if (value.toString().split(".")[1]?.length > 8) {
+            value = value.toFixed(2);
+        }
+        value = value || 0;
+        let prevValues = [...values];
+        prevValues[index] = value;
+        setValues(prevValues);
+    };
+
+    const handleValueChange = (index, value) =>
+    {
+        // Remove trailing zeros
+        value = parseFloat(value);
+        let prevValues = [...values];
+        prevValues[index] = value;
+
+        // Update other value
+        let otherValue = (value * selectedUnits[index].value) / selectedUnits[1 - index].value;
+
+        if (otherValue.toString().split(".")[1]?.length > 8) {
+            otherValue = otherValue.toFixed(2);
+        }
+        otherValue = otherValue || 0;
+        prevValues[1 - index] = otherValue;
+
+        setValues(prevValues);
+    };
+
+    const handleSwapValues = () =>
+    {
+        let prevValues = [...values];
+        prevValues.reverse();
+        let prevSelectedUnits = [...selectedUnits];
+        prevSelectedUnits.reverse();
+        setSelectedUnits(prevSelectedUnits);
+        setValues(prevValues);
+    };
+
+    const handleButtonClick = (value) =>
+    {
+        let prevValues = [...values];
+
+        switch (value) {
+            case "AC":
+                prevValues = [0, 0];
+                break;
+            case "swap":
+                handleSwapValues();
+                break;
+            case "Backspace":
+                prevValues[focusedInput] =
+                    (prevValues[focusedInput] + "").slice(0, -1) || 0;
+
+                if (prevValues[focusedInput].toString().slice(-1) === ".") {
+                    prevValues[focusedInput] = (prevValues[focusedInput] + "").slice(0, -1);
+                }
+                break;
+            case ".":
+                if (!prevValues[focusedInput].toString().includes(".")) {
+                    prevValues[focusedInput] += ".";
+                }
+                break;
+            default:
+                prevValues[focusedInput] += value;
+                prevValues[focusedInput] = prevValues[focusedInput] || 0;
+                break;
+        }
+
+        if ((value !== "AC", value !== "swap")) {
+            setValues(prevValues);
+            handleValueChange(focusedInput, prevValues[focusedInput]);
+        }
+    };
+
+    const handleKeyboardButtonClick = (btn) =>
+    {
+        buttonsRef.current[btn].click();
+        buttonsRef.current[btn].classList.add("ring-2", "ring-blue-500");
+        setTimeout(() =>
+        {
+            buttonsRef.current[btn].classList.remove("ring-2", "ring-blue-500");
+        }, 200);
+    };
+
+    const handleKeyPress = (e) =>
+    {
+        if (buttonsRef.current[e.key]) {
+            handleKeyboardButtonClick(e.key);
+        }
+
+        // Arrow up sets focus to first input
+        if (e.key === "ArrowUp") {
+            setFocusedInput(0);
+        }
+
+        // Arrow down sets focus to second input
+        if (e.key === "ArrowDown") {
+            setFocusedInput(1);
+        }
+    };
+
+    useEffect(() =>
+    {
+        document.addEventListener("keydown", handleKeyPress);
+        return () =>
+        {
+            document.removeEventListener("keydown", handleKeyPress);
+        };
+    }, []);
+
+
+    return (
+        <div>
+            <div className="w-full">
+                {/* Select converter */ }
+                <div className="m-auto w-max mb-8">
+                    <select
+                        className="bg-transparent outline-none text-sm dark:focus:text-white focus:text-black"
+                        value={ selectedConverter }
+                        onChange={ (e) => handleConverterChange(e.target.value) }>
+                        { converters.map((converter, index) =>
+                        (
+                            <option
+                                key={ index }
+                                value={ index }
+                                className="bg-light-100 dark:bg-dark-100">
+                                { converter.name }
+                            </option>
+                        )) }
+                    </select>
+                </div>
+                <div className="min-h-[154px] px-4">
+                    <div className="flex items-center gap-5 mb-5">
+                        <input
+                            type="number"
+                            className={ `w-full bg-transparent dark:text-white border-b border-dotted outline-none text-4xl font-light p-1
+                        ${focusedInput === 0
+                                    ? "border-black dark:border-white"
+                                    : "border-light-300 dark:border-dark-300"}` }
+                            placeholder="0"
+                            value={ values[0] }
+                            readOnly
+                            onChange={ (e) => handleValueChange(0, e.target.value) }
+                            onClick={ () => setFocusedInput(0) }
+                        />
+                        <select
+                            className="bg-transparent outline-none border-none text-sm focus:text-black dark:focus:text-white"
+                            onChange={ (e) => handleUnitChange(0, e.target.value) }
+                            defaultValue={ 0 }
+                        >
+                            { converters[selectedConverter].units.map((unit, index) => (
+                                <option
+                                    key={ index }
+                                    value={ index }
+                                    className="bg-light-100 dark:bg-dark-100">
+                                    { unit.unit }
+                                </option>
+                            )) }
+                        </select>
+                    </div>
+                    <div className="flex items-center gap-5">
+                        <input
+                            type="number"
+                            className={ `w-full bg-transparent dark:text-white border-b border-dotted outline-none text-4xl font-light p-1
+                            ${focusedInput === 1
+                                    ? "border-black dark:border-white"
+                                    : "border-light-300 dark:border-black-300"}` }
+                            placeholder="0"
+                            value={ values[1] }
+                            readOnly
+                            onChange={ (e) => handleValueChange(1, e.target.value) }
+                            onClick={ () => setFocusedInput(1) }
+                        />
+                        <select
+                            className="bg-transparent outline-none border-none text-sm focus:text-black dark:focus:text-white"
+                            onChange={ (e) => handleUnitChange(1, e.target.value) }
+                            defaultValue={ 1 }>
+                            { converters[selectedConverter].units.map((unit, index) => (
+                                <option
+                                    key={ index }
+                                    value={ index }
+                                    className="bg-light-100 dark:bg-dark-100">
+                                    { unit.unit }
+                                </option>
+                            )) }
+                        </select>
+                    </div>
+                </div>
+                <div className="flex justify-between items-center p-4">
+                    <div className="flex flex-col gap-1 w-full rounded-lg">
+                        { Object.keys(Buttons).map((key) => (
+                            <div className="flex gap-1"
+                                key={ key }>
+                                { Buttons[key].map((item) => (
+                                    <Button
+                                        key={ item.value }
+                                        className={ "w-full" + " " + item.className || "" }
+                                        onClick={ () => handleButtonClick(item.value) }
+                                        ref={ (button) =>
+                                        {
+                                            buttonsRef.current[item.value] = button;
+                                        } }>
+                                        { item.label }
+                                    </Button>
+                                )) }
+                            </div>
+                        )) }
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
+
+
+export default Converter;

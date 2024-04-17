@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import Switch from "./components/Switch";
 import Calculator from "./components/Calculator";
+import Converter from "./components/Converter";
 import ModeSwitch from "./components/ModeSwitch";
 
 
 const App = () =>
 {
-    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [selectedMode, setSelectedMode] = useState(0);
 
-    const handleChange = (index) =>
+    const handleModeChange = (index) =>
     {
-        setSelectedIndex(index);
+        setSelectedMode(index);
     };
 
     return (
@@ -18,12 +19,12 @@ const App = () =>
             <div className="w-full overflow-hidden border-light-200 bg-backgroundDark py-4 text-textDark dark:border-dark-300 dark:bg-background dark:text-text sm:min-h-[40rem] sm:w-[340px] sm:rounded-[45px] sm:border-[8px] sm:shadow-2xl">
                 <div className="px-4 mb-4">
                     <ModeSwitch />
-                    <Switch options={ ["Calculator", "Converter"] }
-                        selectedIndex={ selectedIndex }
-                        onClick={ handleChange }
+                    <Switch options={ ["calculator", "converter"] }
+                        selectedIndex={ selectedMode }
+                        onClick={ handleModeChange }
                     />
                 </div>
-                <Calculator />
+                { selectedMode === 0 ? <Calculator /> : <Converter /> }
             </div>
         </div>
     );
