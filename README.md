@@ -13,7 +13,7 @@ Section for periodic table / elements information in progress.
 
 ## Screenshots
 
-[Live Demo](https://qhf5xj-5173.csb.app/)
+
 
 ![calc-light](https://github.com/tildajson/React-calculator-converter/assets/130234732/6885e70f-a780-4359-8add-b307a700f11a)![convert-dark](https://github.com/tildajson/React-calculator-converter/assets/130234732/e2741181-b924-47f2-96a3-cafc92a67d5b)
 
